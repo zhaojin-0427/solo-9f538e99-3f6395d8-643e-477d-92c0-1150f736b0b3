@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Error {{ status }}{% endblock %}
+{% block body %}
+<h1>{{ status }} — collection could not complete</h1>
+<div class="flash error">{{ message }}</div>
+<p class="muted">Error code: <code>{{ code }}</code>. Any previously published revision is
+still current and can be downloaded from the source page.</p>
+<p><a href="{{ back }}">Go back</a> · <a href="{{ url_for('index') }}">Home</a></p>
+{% endblock %}

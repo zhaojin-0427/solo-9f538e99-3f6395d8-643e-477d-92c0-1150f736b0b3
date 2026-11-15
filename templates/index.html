@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Agricultural wholesale price collector</h1>
+<p class="muted">
+  Enter the public manifest URL and the business date to load. The collector
+  fetches the manifest, verifies the revision against its byte count and
+  SHA-256, checks the CSV rows, then publishes it. An earlier revision stays
+  downloadable until the new one is published.
+</p>
+
+<form method="post" action="{{ url_for('collect_form') }}">
+  <label for="manifest_url">Manifest URL</label>
+  <input id="manifest_url" name="manifest_url" type="url" required
+         placeholder="http://sample-source:8001/manifest.json"
+         value="{{ request.form.get('manifest_url', '') }}">
+  <label for="day">Business date (YYYY-MM-DD)</label>
+  <input id="day" name="day" type="text" required pattern="\d{4}-\d{2}-\d{2}"
+         value="{{ request.form.get('day', default_day) }}">
+  <button type="submit">Collect revision</button>
+</form>
+
+<h2>Sources</h2>
+{% if sources %}
+<table>
+  <thead><tr><th>ID</th><th>Manifest</th><th>Current revision</th><th>Revisions</th><th></th></tr></thead>
+  <tbody>
+  {% for s in sources %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td class="mono">{{ s.manifest_url }}</td>
+      <td>{% if s.current_revision %}<span class="pill">{{ s.current_revision }}</span>{% else %}<span class="muted">none</span>{% endif %}</td>
+      <td>{{ s.revision_count }}</td>
+      <td><a href="{{ url_for('source_detail', source_id=s.id) }}">open</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No sources collected yet.</p>
+{% endif %}
+
+<h2>Recent collections</h2>
+{% if jobs %}
+<table>
+  <thead><tr><th>When</th><th>Day</th><th>Status</th><th>Revision</th><th>Resumed</th><th>Detail</th></tr></thead>
+  <tbody>
+  {% for j in jobs %}
+    <tr>
+      <td class="mono">{{ j.updated_at }}</td>
+      <td class="mono">{{ j.day }}</td>
+      <td>{{ j.status }}</td>
+      <td class="mono">{{ j.revision or "—" }}</td>
+      <td>{{ j.resumed_bytes if j.resumed_bytes else "—" }}</td>
+      <td>{{ j.message }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No collection attempts recorded.</p>
+{% endif %}
+{% endblock %}

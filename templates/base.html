@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Agri price collector{% endblock %}</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+           max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; margin: .75rem 0 1.5rem; }
+    th, td { text-align: left; padding: .4rem .55rem; border-bottom: 1px solid #8884; vertical-align: top; }
+    th { font-weight: 600; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .86em; word-break: break-all; }
+    form.inline { display: inline; }
+    label { display: block; margin: .5rem 0 .15rem; font-weight: 600; }
+    input[type=text], input[type=url] { width: 100%; box-sizing: border-box; padding: .45rem; }
+    button { padding: .45rem .8rem; margin-top: .75rem; cursor: pointer; }
+    .flash { padding: .55rem .8rem; border-radius: 4px; margin: .5rem 0; }
+    .flash.success { background: #2f8f4e22; border: 1px solid #2f8f4e; }
+    .flash.info { background: #2f6f8f22; border: 1px solid #2f6f8f; }
+    .flash.error { background: #b0303022; border: 1px solid #b03030; }
+    .muted { opacity: .7; }
+    .badge { display: inline-block; padding: 0 .4rem; border-radius: 3px; font-size: .8em; border: 1px solid currentColor; }
+    .badge.current { color: #2f8f4e; }
+    .pill { font-size: .8em; border: 1px solid #8886; border-radius: 999px; padding: .05rem .5rem; }
+    nav a { margin-right: .75rem; }
+  </style>
+</head>
+<body>
+  <nav><a href="{{ url_for('index') }}">Collect</a><a href="{{ url_for('api_sources') }}">API</a></nav>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block body %}{% endblock %}
+</body>
+</html>
